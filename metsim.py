@@ -92,11 +92,15 @@ class metabolite_pool(object):
         global verbose
         if verbose:
             print('running %s.from_tmp' % self.metabolite_name)
-        source = source.sample(n = number_of_molecules)
-        self.pool = pd.concat([self.pool, source])
+        tmp = source.sample(n = number_of_molecules)
+        
+        #test
+        source.tmp = source.loc[~source.index.isin(tmp.index)] # Consume molecules from source pool
+
+        self.pool = pd.concat([self.pool, tmp])
         # Sanity check
         if self.pool.shape[0] != self.pool_size:
-            print('ERROR in function "%s from_tmp": Pool size changed' % self.metabolite_name)
+            print('ERROR in function "%s.from_tmp": Pool size changed' % self.metabolite_name)
             quit()
         self.pool = self.pool.reset_index(drop=True)
         if verbose:
@@ -169,38 +173,33 @@ def glutamate_to_succinate(number_of_molecules):
 
 # Testing
 
-#citrate = metabolite_pool('citrate', 6, 10)
-#citrate.initialize_pool()
-#citrate.to_tmp(10)
-#citrate.introduce_molecule(10, {'C1': 1, 'C2': 1, 'C3': 1, 'C4': 1, 'C5': 1, 'C6': 1})
-#citrate_to_glutamate(1)
-#
-#glutamate = metabolite_pool('glutamate', 5, 20)
-#glutamate.initialize_pool()
-#glutamate.to_tmp(1)
-#glutamate.from_tmp(1, citrate_to_glutamate.tmp)
-#
-#succinate = metabolite_pool('succinate', 4, 10)
-#succinate.initialize_pool()
-#succinate.to_tmp(5)
-#glutamate_to_succinate(5)
-#succinate.from_tmp(5, glutamate_to_succinate.tmp)
+pool1 = metabolite_pool('pool1', 4, 10)
+pool1.initialize_pool()
+
+pool2 = metabolite_pool('pool2', 4, 10)
+pool2.initialize_pool()
+
+pool1.to_tmp(3)
+pool2.to_tmp(6)
+
+pool1.from_tmp(3, pool2.tmp)
+print(pool2.tmp)
 
 
 # TCA cycle
 
 # Initialte pools
-pyruvate = metabolite_pool('pyruvate', 3, 10) # will be replenished infinitely with labeled carbons
-pyruvate.initialize_pool()
-
-citrate = metabolite_pool('citrate', 6, 10)
-citrate.initialize_pool()
-
-glutamate = metabolite_pool('glutamate', 5, 10)
-glutamate.initialize_pool()
-
-aspartate = metabolite_pool('aspartate', 4, 10)
-aspartate.initialize_pool()
+#pyruvate = metabolite_pool('pyruvate', 3, 10) # will be replenished infinitely with labeled carbons
+#pyruvate.initialize_pool()
+#
+#citrate = metabolite_pool('citrate', 6, 10)
+#citrate.initialize_pool()
+#
+#glutamate = metabolite_pool('glutamate', 5, 10)
+#glutamate.initialize_pool()
+#
+#aspartate = metabolite_pool('aspartate', 4, 10)
+#aspartate.initialize_pool()
 
 
 # move molecules to tmp for every metabolite pool
