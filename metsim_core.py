@@ -144,11 +144,24 @@ class metabolite_pool(object):
             print('running %s.introduce_molecules' % self.metabolite_name)
 
         # Sanity check
-        if type(molecule) is not dict:
-            print('ERROR: variable "molecule" in function "introduce_molecules" is not a dictionary.')
+        if type(molecule) is not str:
+            print('ERROR: variable "molecule" in function "introduce_molecules" is not a string.')
             quit()
 
-        new_molecules = pd.DataFrame(number_of_molecules*[molecule])
+        # Convert input string to dict
+        molecule_tuple = tuple(molecule)
+
+        # Sanity check
+        if len(molecule_tuple) != self.number_of_carbons:
+            print('ERROR in function introduce_molecules: Molecule specified has the wrong number of carbons')
+            quit()
+
+        molecule_dict = {}
+        for i in range(len(molecule)):
+            molecule_dict['C' + str(i+1)] =  int(molecule_tuple[i])
+
+
+        new_molecules = pd.DataFrame(number_of_molecules*[molecule_dict])
         self.pool = pd.concat([self.pool, new_molecules])
         self.pool = self.pool.reset_index(drop = True)
 
@@ -279,7 +292,7 @@ oxaloacetate.initialize_pool()
 
 # Start with labeled pyruvate pool
 pyruvate.to_tmp(5)
-pyruvate.introduce_molecules(5, {'C1': 1, 'C2': 1, 'C3': 1})
+pyruvate.introduce_molecules(5, '111')
 
 for i in range(1000):
 
@@ -293,13 +306,13 @@ for i in range(1000):
     oxaloacetate.to_tmp(5)
 
     # Move from tmp
-    pyruvate.introduce_molecules(5, {'C1': 1, 'C2': 1, 'C3': 1})
+    pyruvate.introduce_molecules(5, '111')
 
     oxaloacetate_to_citrate(5)
     citrate.from_tmp(5, oxaloacetate_to_citrate.tmp)
 
     citrate_to_glutamate(5)
-    glutamate.introduce_molecules(5, {'C1': 0, 'C2': 0, 'C3': 0, 'C4': 0, 'C5': 0})
+    glutamate.introduce_molecules(5, '00000')
     glutamate.from_tmp(5, citrate_to_glutamate.tmp)
 
     glutamate_to_succinate(5)
