@@ -27,17 +27,3 @@ First, from every metabolite pool random molecules are moved to a intermediate p
 All necessary steps are defined as class methods or functions and ultimately strung together to form a sequence which makes up the step which is iterated to simulate the metabolism.
 Enrichment is calculated, stored in a dataframe and can afterwards be saved to csv-files and plotted.
 Check $diagram for a detailed class diagram.
-
-
-Planned Features
-================
-
-- GUI
-- Use machine learning to generate desired enrichment patterns by changing parameters
-
-
-ToDo
-====
-
-- Write function which calculates enrichment after enrichment has been equilibrated between two pools
-- Calculate enrichment for every carbon
