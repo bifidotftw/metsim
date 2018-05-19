@@ -23,15 +23,8 @@ class metabolite_pool(object):
         # Initialize empty variables for later use
         self.pool = None
         self.tmp = None
-
-        # Initialize dataframes with first value(s) of 0 for exporting to csv
-        self.collection_total_excess = pd.DataFrame({'total_excess': [0]})
-        # Creates dataframe according to number_of_carbons of the metabolite
-        first_row = {}
-        for i in range(self.number_of_carbons):
-            i = i+1
-            first_row['M+' + str(i)] = 0
-            self.collection_isotop_distr = pd.DataFrame.from_dict([first_row])
+        self.collection_total_excess = pd.DataFrame()
+        self.collection_isotop_distr = pd.DataFrame()
 
 
 
@@ -333,4 +326,4 @@ for i in range(10):
     glutamate.calculate_enrichment()
     oxaloacetate.calculate_enrichment()
 
-citrate.draw()
+citrate.export_csv()
