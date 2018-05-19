@@ -63,8 +63,8 @@ class metabolite_pool(object):
         tmp = source.sample(n = number_of_molecules)
         # TODO: Debug
         # source == pool2.tmp (specified in line 94)
-        source = source.loc[~source.index.isin(tmp.index)] # Consume molecules from source pool
-        #pool2.tmp = source.loc[~source.index.isin(tmp.index)] # Produces desired output!
+        source = source.loc[~source.index.isin(tmp.index)] # Returns wrong output (line 97)!
+        #pool2.tmp = source.loc[~source.index.isin(tmp.index)] # Produces desired output (line 106)!
 
         self.pool = pd.concat([self.pool, tmp])
 
