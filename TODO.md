@@ -5,6 +5,9 @@ Include all basic features.
 
 - Generalize symmetry
 	- Understand problem in minimal example
+	- Invert array
+	- Alles was c wird a
+	- Indices statt namen
 - Remove used molecules from tmp
 	- Fix problem with variable source
 - Move verbose switch from metsim_core to metsim_paramters

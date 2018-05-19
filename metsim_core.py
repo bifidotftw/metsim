@@ -177,19 +177,20 @@ class metabolite_pool(object):
 
 
     def mirror_symmetry(self):
-#        #TODO: generalize mirror symmetry
-#        rotate = self.pool.sample(frac = 0.5)
-#        self.pool = self.pool.loc[~self.pool.index.isin(rotate.index)]
-#
-#        rotate = rotate.rename(columns = {rotate.columns[0]
-        ### ATTENTION: CHANGED TO succinate
+        if verbose:
+            print('running mirror_symmetry')
+            print('')
+
         # Randomly choose 50% of the rows
-        rotate = succinate.pool.sample(frac=0.5)
+        to_be_rotated = self.pool.sample(frac=0.5)
         # Selects all rows which are NOT in rotate and updates pool
-        succinate.pool = succinate.pool.loc[~succinate.pool.index.isin(rotate.index)]
-        rotate = rotate.rename(columns={'C1': 'C4', 'C2': 'C3', 'C3': 'C2', 'C4': 'C1'})
+
+        have_been_rotated = to_be_rotated.rename(columns={a: b for a, b in zip(to_be_rotated.columns, reversed(to_be_rotated.columns))})
+        print(have_been_rotated)
+
         # Concatenate dataframes
-        succinate.pool = pd.concat([rotate, succinate.pool])
+        self.pool = pd.concat([have_been_rotated, self.pool])
+
         # Sanity check
         #if succinate.pool.shape[0] != succinate.pool_size:
         #    print('ERROR in function "mirror_symmetry_succinate": Pool size changed')
@@ -249,82 +250,76 @@ def glutamate_to_succinate(number_of_molecules):
 
 
 # Testing
-#if __name__ == "__main__":
+pool1 = metabolite_pool('pool1', 4, 10)
+pool1.initialize_pool()
+
+pool2 = metabolite_pool('pool2', 4, 10)
+pool2.initialize_pool()
+
+pool1.to_tmp(3)
+pool2.to_tmp(6)
+
+pool1.from_tmp(3, pool2.tmp)
+print(pool2.tmp)
+print('')
+
+
+
+## Initialize pools
 #
-#    pool1 = metabolite_pool('pool1', 4, 10)
-#    pool1.initialize_pool()
+#pyruvate = metabolite_pool('pyruvate', 3, 5) # will be replenished infinitely with labeled carbons
+#pyruvate.initialize_pool()
 #
-#    pool2 = metabolite_pool('pool2', 4, 10)
-#    pool2.initialize_pool()
+#citrate = metabolite_pool('citrate', 6, 50)
+#citrate.initialize_pool()
 #
-#    pool1.to_tmp(3)
-#    pool2.to_tmp(6)
+#glutamate = metabolite_pool('glutamate', 5, 50)
+#glutamate.initialize_pool()
 #
-#    pool1.from_tmp(3, pool2.tmp)
-#    print(pool2.tmp)
-#    print('')
+#succinate = metabolite_pool('succinate', 4, 50)
+#succinate.initialize_pool()
 #
-#    pool1.calculate_enrichment()
-#    pool1.export_csv()
-
-
-
-
-# Initialize pools
-
-pyruvate = metabolite_pool('pyruvate', 3, 5) # will be replenished infinitely with labeled carbons
-pyruvate.initialize_pool()
-
-citrate = metabolite_pool('citrate', 6, 50)
-citrate.initialize_pool()
-
-glutamate = metabolite_pool('glutamate', 5, 50)
-glutamate.initialize_pool()
-
-succinate = metabolite_pool('succinate', 4, 50)
-succinate.initialize_pool()
-
-oxaloacetate = metabolite_pool('oxaloacetate', 4, 50)
-oxaloacetate.initialize_pool()
-
-
-# Sequence
-
-# Start with labeled pyruvate pool
-pyruvate.to_tmp(5)
-pyruvate.introduce_molecules(5, '111')
-
-for i in range(1000):
-
-    succinate.mirror_symmetry()
-
-    # Move to tmp
-    pyruvate.to_tmp(5)
-    citrate.to_tmp(5)
-    glutamate.to_tmp(10)
-    succinate.to_tmp(5)
-    oxaloacetate.to_tmp(5)
-
-    # Move from tmp
-    pyruvate.introduce_molecules(5, '111')
-
-    oxaloacetate_to_citrate(5)
-    citrate.from_tmp(5, oxaloacetate_to_citrate.tmp)
-
-    citrate_to_glutamate(5)
-    glutamate.introduce_molecules(5, '00000')
-    glutamate.from_tmp(5, citrate_to_glutamate.tmp)
-
-    glutamate_to_succinate(5)
-    succinate.from_tmp(5, glutamate_to_succinate.tmp)
-
-    oxaloacetate.from_tmp(5, succinate.tmp)
-
-    # Calculate enrichment
-    citrate.calculate_enrichment()
-    glutamate.calculate_enrichment()
-    oxaloacetate.calculate_enrichment()
-
-citrate.export_csv()
-glutamate.export_csv()
-oxaloacetate.export_csv()
+#oxaloacetate = metabolite_pool('oxaloacetate', 4, 50)
+#oxaloacetate.initialize_pool()
+#
+#
+## Sequence
+#
+## Start with labeled pyruvate pool
+#pyruvate.to_tmp(5)
+#pyruvate.introduce_molecules(5, '111')
+#
+#for i in range(1000):
+#
+#    succinate.mirror_symmetry()
+#
+#    # Move to tmp
+#    pyruvate.to_tmp(5)
+#    citrate.to_tmp(5)
+#    glutamate.to_tmp(10)
+#    succinate.to_tmp(5)
+#    oxaloacetate.to_tmp(5)
+#
+#    # Move from tmp
+#    pyruvate.introduce_molecules(5, '111')
+#
+#    oxaloacetate_to_citrate(5)
+#    citrate.from_tmp(5, oxaloacetate_to_citrate.tmp)
+#
+#    citrate_to_glutamate(5)
+#    glutamate.introduce_molecules(5, '00000')
+#    glutamate.from_tmp(5, citrate_to_glutamate.tmp)
+#
+#    glutamate_to_succinate(5)
+#    succinate.from_tmp(5, glutamate_to_succinate.tmp)
+#
+#    oxaloacetate.from_tmp(5, succinate.tmp)
+#
+#    # Calculate enrichment
+#    citrate.calculate_enrichment()
+#    glutamate.calculate_enrichment()
+#    oxaloacetate.calculate_enrichment()
+#
+#citrate.export_csv()
+#glutamate.export_csv()
+#oxaloacetate.export_csv()
