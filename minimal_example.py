@@ -1,6 +1,4 @@
 import pandas as pd
-import os.path
-import csv
 
 verbose = True
 
@@ -93,7 +91,7 @@ pool2.initialize_pool()
 pool1.to_tmp(3)
 pool2.to_tmp(6)
 
-pool1.from_tmp(3, pool2.tmp)
+pool1.from_tmp(3, pool2.tmp) # see line 64
 print(pool2.tmp)
 # print: pool2.tmp
 #   C1  C2  C3  C4
