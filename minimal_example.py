@@ -62,7 +62,7 @@ class metabolite_pool(object):
 
         tmp = source.sample(n = number_of_molecules)
         # TODO: Debug
-        # source == pool2.tmp (specified in line 95)
+        # source == pool2.tmp (specified in line 94)
         source = source.loc[~source.index.isin(tmp.index)] # Consume molecules from source pool
         #pool2.tmp = source.loc[~source.index.isin(tmp.index)] # Produces desired output!
 
