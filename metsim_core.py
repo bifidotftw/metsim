@@ -1,8 +1,15 @@
 import pandas as pd
 import os.path
 import csv
+import matplotlib.pyplot as plt
 
-verbose = True
+
+
+def verbosity(flag):
+    global verbose
+    verbose = flag
+
+
 
 class metabolite_pool(object):
     
@@ -88,14 +95,21 @@ class metabolite_pool(object):
         directory = os.path.join(os.getcwd(), 'csv')
         if not os.path.exists(directory):
             os.makedirs(directory)
-        self.collection_total_excess.to_csv(os.path.join(directory, str(self.metabolite_name) + '_total_excess.out'))
-        self.collection_isotop_distr.to_csv(os.path.join(directory, str(self.metabolite_name) + '_isotop_distr.out'))
+        self.collection_total_excess.to_csv(os.path.join(directory, str(self.metabolite_name) + '_total_excess.csv'))
+        self.collection_isotop_distr.to_csv(os.path.join(directory, str(self.metabolite_name) + '_isotop_distr.csv'))
 
         if verbose:
             #print(self.collection_total_excess)
             #print(self.collection_isotop_distr)
             print('Exported to folder "csv"')
             print('')
+
+
+
+    def draw(self):
+        self.collection_total_excess.plot()
+        self.collection_isotop_distr.plot()
+        plt.show()
 
 
 
@@ -247,76 +261,76 @@ def glutamate_to_succinate(number_of_molecules):
 
 
 # Testing
-pool1 = metabolite_pool('pool1', 4, 10)
-pool1.initialize_pool()
+#pool1 = metabolite_pool('pool1', 4, 10)
+#pool1.initialize_pool()
+#
+#pool2 = metabolite_pool('pool2', 4, 10)
+#pool2.initialize_pool()
+#
+#pool1.to_tmp(3)
+#pool2.to_tmp(6)
+#
+#pool1.from_tmp(3, pool2)
+#print(pool2.tmp)
+#print('')
 
-pool2 = metabolite_pool('pool2', 4, 10)
-pool2.initialize_pool()
-
-pool1.to_tmp(3)
-pool2.to_tmp(6)
-
-pool1.from_tmp(3, pool2)
-print(pool2.tmp)
-print('')
 
 
+# Initialize pools
 
-## Initialize pools
-#
-#pyruvate = metabolite_pool('pyruvate', 3, 5) # will be replenished infinitely with labeled carbons
-#pyruvate.initialize_pool()
-#
-#citrate = metabolite_pool('citrate', 6, 50)
-#citrate.initialize_pool()
-#
-#glutamate = metabolite_pool('glutamate', 5, 50)
-#glutamate.initialize_pool()
-#
-#succinate = metabolite_pool('succinate', 4, 50)
-#succinate.initialize_pool()
-#
-#oxaloacetate = metabolite_pool('oxaloacetate', 4, 50)
-#oxaloacetate.initialize_pool()
-#
-#
-## Sequence
-#
-## Start with labeled pyruvate pool
-#pyruvate.to_tmp(5)
-#pyruvate.introduce_molecules(5, '111')
-#
-#for i in range(1000):
-#
-#    succinate.mirror_symmetry()
-#
-#    # Move to tmp
-#    pyruvate.to_tmp(5)
-#    citrate.to_tmp(5)
-#    glutamate.to_tmp(10)
-#    succinate.to_tmp(5)
-#    oxaloacetate.to_tmp(5)
-#
-#    # Move from tmp
-#    pyruvate.introduce_molecules(5, '111')
-#
-#    oxaloacetate_to_citrate(5)
-#    citrate.from_tmp(5, oxaloacetate_to_citrate.tmp)
-#
-#    citrate_to_glutamate(5)
-#    glutamate.introduce_molecules(5, '00000')
-#    glutamate.from_tmp(5, citrate_to_glutamate.tmp)
-#
-#    glutamate_to_succinate(5)
-#    succinate.from_tmp(5, glutamate_to_succinate.tmp)
-#
-#    oxaloacetate.from_tmp(5, succinate.tmp)
-#
-#    # Calculate enrichment
-#    citrate.calculate_enrichment()
-#    glutamate.calculate_enrichment()
-#    oxaloacetate.calculate_enrichment()
-#
-#citrate.export_csv()
-#glutamate.export_csv()
-#oxaloacetate.export_csv()
+verbose = True
+
+pyruvate = metabolite_pool('pyruvate', 3, 5) # will be replenished infinitely with labeled carbons
+pyruvate.initialize_pool()
+
+citrate = metabolite_pool('citrate', 6, 50)
+citrate.initialize_pool()
+
+glutamate = metabolite_pool('glutamate', 5, 50)
+glutamate.initialize_pool()
+
+succinate = metabolite_pool('succinate', 4, 50)
+succinate.initialize_pool()
+
+oxaloacetate = metabolite_pool('oxaloacetate', 4, 50)
+oxaloacetate.initialize_pool()
+
+
+# Sequence
+
+# Start with labeled pyruvate pool
+pyruvate.to_tmp(5)
+pyruvate.introduce_molecules(5, '111')
+
+for i in range(10):
+
+    succinate.mirror_symmetry()
+
+    # Move to tmp
+    pyruvate.to_tmp(5)
+    citrate.to_tmp(5)
+    glutamate.to_tmp(10)
+    succinate.to_tmp(5)
+    oxaloacetate.to_tmp(5)
+
+    # Move from tmp
+    pyruvate.introduce_molecules(5, '111')
+
+    oxaloacetate_to_citrate(5)
+    citrate.from_tmp(5, oxaloacetate_to_citrate)
+
+    citrate_to_glutamate(5)
+    glutamate.introduce_molecules(5, '00000')
+    glutamate.from_tmp(5, citrate_to_glutamate)
+
+    glutamate_to_succinate(5)
+    succinate.from_tmp(5, glutamate_to_succinate)
+
+    oxaloacetate.from_tmp(5, succinate)
+
+    # Calculate enrichment
+    citrate.calculate_enrichment()
+    glutamate.calculate_enrichment()
+    oxaloacetate.calculate_enrichment()
+
+citrate.draw()
