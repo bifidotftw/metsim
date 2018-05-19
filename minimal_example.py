@@ -66,7 +66,8 @@ class metabolite_pool(object):
         # TODO: Debug
         # source == pool2.tmp (specified in line 95)
         source = source.loc[~source.index.isin(tmp.index)] # Consume molecules from source pool
-        # Comment: Everything works but source is not replaced with what source is set to
+        #pool2.tmp = source.loc[~source.index.isin(tmp.index)] # Produces desired output!
+
         self.pool = pd.concat([self.pool, tmp])
 
         # Sanity check
@@ -94,6 +95,19 @@ pool2.to_tmp(6)
 
 pool1.from_tmp(3, pool2.tmp)
 print(pool2.tmp)
-print('')
-
-
+# print: pool2.tmp
+#   C1  C2  C3  C4
+#7   0   0   0   0
+#8   0   0   0   0
+#3   0   0   0   0
+#5   0   0   0   0
+#6   0   0   0   0
+#4   0   0   0   0
+#(Indices are random)
+#
+# Desired output:
+#   C1  C2  C3  C4
+#7   0   0   0   0
+#8   0   0   0   0
+#3   0   0   0   0
+#(Indices are random)
