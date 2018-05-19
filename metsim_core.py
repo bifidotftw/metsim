@@ -118,11 +118,8 @@ class metabolite_pool(object):
         if verbose:
             print('running %s.from_tmp' % self.metabolite_name)
 
-        tmp = source.sample(n = number_of_molecules)
-        # TODO: Debug
-        # source == pool2.tmp
-        source = source.loc[~source.index.isin(tmp.index)] # Consume molecules from source pool
-        # Comment: Everything works but source is not replaced with what source is set to
+        tmp = source.tmp.sample(n = number_of_molecules)
+        source.tmp = source.tmp.loc[~source.tmp.index.isin(tmp.index)] # Consume molecules from source pool
         self.pool = pd.concat([self.pool, tmp])
 
         # Sanity check
@@ -259,7 +256,7 @@ pool2.initialize_pool()
 pool1.to_tmp(3)
 pool2.to_tmp(6)
 
-pool1.from_tmp(3, pool2.tmp)
+pool1.from_tmp(3, pool2)
 print(pool2.tmp)
 print('')
 

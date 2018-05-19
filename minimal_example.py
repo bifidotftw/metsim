@@ -60,10 +60,10 @@ class metabolite_pool(object):
         if verbose:
             print('running %s.from_tmp' % self.metabolite_name)
 
-        tmp = source.sample(n = number_of_molecules)
+        tmp = source.tmp.sample(n = number_of_molecules)
         # TODO: Debug
         # source == pool2.tmp (specified in line 94)
-        source = source.loc[~source.index.isin(tmp.index)] # Returns wrong output (line 97)!
+        source.tmp = source.tmp.loc[~source.tmp.index.isin(tmp.index)] # Returns wrong output (line 97)!
         #pool2.tmp = source.loc[~source.index.isin(tmp.index)] # Produces desired output (line 106)!
 
         self.pool = pd.concat([self.pool, tmp])
@@ -91,7 +91,7 @@ pool2.initialize_pool()
 pool1.to_tmp(3)
 pool2.to_tmp(6)
 
-pool1.from_tmp(3, pool2.tmp) # see line 66
+pool1.from_tmp(3, pool2) # see line 66
 print(pool2.tmp)
 # print: pool2.tmp
 #   C1  C2  C3  C4
