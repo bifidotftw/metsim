@@ -81,7 +81,7 @@ class metabolite_pool(object):
 
 
 
-    def export_csv(self):
+    def export(self):
         if verbose:
             print('running %s export_csv' % self.metabolite_name)
 
@@ -112,16 +112,25 @@ class metabolite_pool(object):
 
         # Draw figures
         self.collection_total_excess.plot()
+        plt.savefig(os.path.join(directory, str(self.metabolite_name) + '_total_excess.png'))
         #self.collection_isotop_distr.plot()
 
         # relative isotop distr
-        # TODO: Debug
         fig, ax = plt.subplots()
         x = range(self.collection_relative_isotop_distr.shape[0])
         ax.stackplot(x, self.collection_relative_isotop_distr.T)
         ax.margins(0, 0) # Set margins to avoid "whitespace"
 
-        plt.show()
+        #plt.show()
+        plt.savefig(os.path.join(directory, str(self.metabolite_name) + '_isotop_distr.png'))
+
+
+        # Print last total excess and isotop distr
+        print('%s:' % self.metabolite_name)
+        print(str(self.collection_total_excess.iloc[-1:]))
+        print(str(self.collection_isotop_distr.iloc[-1:]))
+        print('')
+
 
 
 
@@ -315,7 +324,7 @@ oxaloacetate.initialize_pool()
 pyruvate.to_tmp(5)
 pyruvate.introduce_molecules(5, '111')
 
-for i in range(1000):
+for i in range(10):
 
     succinate.mirror_symmetry()
 
@@ -346,4 +355,4 @@ for i in range(1000):
     glutamate.calculate_enrichment()
     oxaloacetate.calculate_enrichment()
 
-citrate.export_csv()
+citrate.export()
