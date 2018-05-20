@@ -59,15 +59,15 @@ class metabolite_pool(object):
         # Calculate isotopologue distribution
         
         # Sums up all rows individually, sum represents number of 13C in the molecule
-        self.row_sum = pd.DataFrame({'Number_of_13C': self.pool.sum(axis=1)})
+        self.row_sum = pd.DataFrame({'Number_of_13C': self.pool.sum(axis = 1)})
 
         # Calculates for every M+# the enrichment and stores it in a dict
         self.isotop_distr = {}
         for i in range(self.number_of_carbons):
             i = i+1
-            tmp = self.row_sum[self.row_sum.Number_of_13C == i]
-            count = tmp.shape[0]
-            enrichment = count/self.row_sum.shape[0]
+            tmp = self.row_sum[self.row_sum.Number_of_13C == i] # Sum of row == i -> M+i
+            count = tmp.shape[0] # count rows where sum of rows == i -> number of molecules with M+i
+            enrichment = count/self.row_sum.shape[0] # relative to the total amount of rows
             self.isotop_distr['M+' + str(i)] = enrichment
 
         if verbose:
@@ -88,8 +88,18 @@ class metabolite_pool(object):
         directory = os.path.join(os.getcwd(), 'csv')
         if not os.path.exists(directory):
             os.makedirs(directory)
+
         self.collection_total_excess.to_csv(os.path.join(directory, str(self.metabolite_name) + '_total_excess.csv'))
         self.collection_isotop_distr.to_csv(os.path.join(directory, str(self.metabolite_name) + '_isotop_distr.csv'))
+
+        # Calculate relative isotopologue distribution
+        self.collection_relative_isotop_distr = pd.DataFrame()
+        for i in range(len(self.collection_isotop_distr.columns)):
+            self.collection_relative_isotop_distr['M+' + str(i+1)] = self.collection_isotop_distr.loc[:, 'M+' + str(i+1)]/self.collection_isotop_distr.sum(axis = 1)
+        
+        # Export relative isotopologue distribution
+        self.collection_relative_isotop_distr.to_csv(os.path.join(directory, str(self.metabolite_name) + '_relative_isotop_distr.csv'))
+
 
         if verbose:
             #print(self.collection_total_excess)
@@ -188,6 +198,7 @@ class metabolite_pool(object):
         # Randomly choose 50% of the rows
         to_be_rotated = self.pool.sample(frac=0.5)
         # Selects all rows which are NOT in rotate and updates pool
+        self.pool = self.pool.loc[~self.pool.index.isin(to_be_rotated.index)]
 
         have_been_rotated = to_be_rotated.rename(columns={a: b for a, b in zip(to_be_rotated.columns, reversed(to_be_rotated.columns))})
         print(have_been_rotated)
@@ -295,7 +306,7 @@ oxaloacetate.initialize_pool()
 pyruvate.to_tmp(5)
 pyruvate.introduce_molecules(5, '111')
 
-for i in range(10):
+for i in range(100):
 
     succinate.mirror_symmetry()
 
@@ -326,4 +337,5 @@ for i in range(10):
     glutamate.calculate_enrichment()
     oxaloacetate.calculate_enrichment()
 
+print(citrate.pool)
 citrate.export_csv()
