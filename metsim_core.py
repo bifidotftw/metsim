@@ -111,7 +111,10 @@ class metabolite_pool(object):
 
 
         # Draw figures
-        self.collection_total_excess.plot()
+        ax = self.collection_total_excess.plot(legend = None)
+        ax.set_xlabel('steps')
+        ax.set_ylabel('total excess')
+        ax.set_title('%s enrichment kinetic' % self.metabolite_name)
         plt.savefig(os.path.join(directory, str(self.metabolite_name) + '_total_excess.png'))
         #self.collection_isotop_distr.plot()
 
@@ -120,6 +123,9 @@ class metabolite_pool(object):
         x = range(self.collection_relative_isotop_distr.shape[0])
         ax.stackplot(x, self.collection_relative_isotop_distr.T)
         ax.margins(0, 0) # Set margins to avoid "whitespace"
+        ax.set_xlabel('steps')
+        ax.set_title('%s isotopologue distribution' % self.metabolite_name)
+        ax.legend(self.collection_relative_isotop_distr.columns, loc = 'center left')
 
         #plt.show()
         plt.savefig(os.path.join(directory, str(self.metabolite_name) + '_isotop_distr.png'))
