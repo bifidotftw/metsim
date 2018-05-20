@@ -1,7 +1,7 @@
 Scope
 =====
 
-Simulate distribution of 13C for a given metabolic network at steady state (= constant metabolite pool sizes).
+Simulate distribution of 13C for a given metabolic network at dynamic equilibrium (= constant metabolite pool sizes).
 
 
 Programming Design
