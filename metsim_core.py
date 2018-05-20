@@ -104,14 +104,23 @@ class metabolite_pool(object):
         if verbose:
             #print(self.collection_total_excess)
             #print(self.collection_isotop_distr)
-            print('Exported to folder "csv"')
+            print('exported to folder "csv"')
+            print('')
+            print('drawing total excess and relative isotopologue distribution')
             print('')
 
 
-
-    def draw(self):
+        # Draw figures
         self.collection_total_excess.plot()
-        self.collection_isotop_distr.plot()
+        #self.collection_isotop_distr.plot()
+
+        # relative isotop distr
+        # TODO: Debug
+        fig, ax = plt.subplots()
+        x = range(self.collection_relative_isotop_distr.shape[0])
+        ax.stackplot(x, self.collection_relative_isotop_distr.T)
+        ax.margins(0, 0) # Set margins to avoid "whitespace"
+
         plt.show()
 
 
@@ -287,16 +296,16 @@ verbose = True
 pyruvate = metabolite_pool('pyruvate', 3, 5) # will be replenished infinitely with labeled carbons
 pyruvate.initialize_pool()
 
-citrate = metabolite_pool('citrate', 6, 50)
+citrate = metabolite_pool('citrate', 6, 100)
 citrate.initialize_pool()
 
-glutamate = metabolite_pool('glutamate', 5, 50)
+glutamate = metabolite_pool('glutamate', 5, 100)
 glutamate.initialize_pool()
 
-succinate = metabolite_pool('succinate', 4, 50)
+succinate = metabolite_pool('succinate', 4, 100)
 succinate.initialize_pool()
 
-oxaloacetate = metabolite_pool('oxaloacetate', 4, 50)
+oxaloacetate = metabolite_pool('oxaloacetate', 4, 100)
 oxaloacetate.initialize_pool()
 
 
@@ -306,7 +315,7 @@ oxaloacetate.initialize_pool()
 pyruvate.to_tmp(5)
 pyruvate.introduce_molecules(5, '111')
 
-for i in range(100):
+for i in range(1000):
 
     succinate.mirror_symmetry()
 
@@ -337,5 +346,4 @@ for i in range(100):
     glutamate.calculate_enrichment()
     oxaloacetate.calculate_enrichment()
 
-print(citrate.pool)
 citrate.export_csv()
