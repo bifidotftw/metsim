@@ -62,7 +62,7 @@ oxaloacetate.initialize_pool()
 aspartate = metabolite_pool('aspartate', 4, 750*scale)
 aspartate.initialize_pool()
 
-steps = 10000
+steps = 1
 for i in range(steps):
     # Move to tmp
     PG3.to_tmp(40)
@@ -167,18 +167,18 @@ for i in range(steps):
 
 
 serine.export()
-glycine.export()
-pyruvate.export()
-lactate.export()
-alanine.export()
-citrate.export()
-alphaKG.export()
-glutamate.export()
-succinate.export()
-fumarate.export()
-malate.export()
-oxaloacetate.export()
-aspartate.export()
+#glycine.export()
+#pyruvate.export()
+#lactate.export()
+#alanine.export()
+#citrate.export()
+#alphaKG.export()
+#glutamate.export()
+#succinate.export()
+#fumarate.export()
+#malate.export()
+#oxaloacetate.export()
+#aspartate.export()
 
 
 

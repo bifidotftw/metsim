@@ -3,7 +3,7 @@ import os.path
 import csv
 import matplotlib.pyplot as plt
 
-import modules.global_vars
+from modules.global_vars import *
 
 
 class metabolite_pool(object):
@@ -24,7 +24,7 @@ class metabolite_pool(object):
 
 
     def initialize_pool(self):
-        if modules.global_vars.verbose:
+        if verbose:
             print('running %s.initialize_pool' % self.metabolite_name)
 
         #Create dataframe according to number of carbons and pool size with unlabeled molecules
@@ -34,14 +34,14 @@ class metabolite_pool(object):
 
         self.pool = pd.DataFrame(columns)
 
-        if modules.global_vars.verbose:
+        if verbose:
             print(self.pool)
             print('')
 
 
 
     def calculate_enrichment(self):
-        if modules.global_vars.verbose:
+        if verbose:
             print('running %s.calculate_enrichment' % self.metabolite_name)
 
         # Total excess
@@ -63,7 +63,7 @@ class metabolite_pool(object):
             enrichment = count/self.row_sum.shape[0] # relative to the total amount of rows
             self.isotop_distr['M+' + str(i)] = enrichment
 
-        if modules.global_vars.verbose:
+        if verbose:
             print('Total excess: ' + str(self.total_excess))
             print('Isotop. Distr.: ' + str(self.isotop_distr))
             print('')
@@ -75,10 +75,10 @@ class metabolite_pool(object):
 
 
     def export(self):
-        if modules.global_vars.verbose:
+        if verbose:
             print('running %s export_csv' % self.metabolite_name)
 
-        directory = os.path.join(os.getcwd(), 'csv')
+        directory = os.path.join(os.getcwd(), 'output')
         if not os.path.exists(directory):
             os.makedirs(directory)
 
@@ -94,7 +94,7 @@ class metabolite_pool(object):
         self.collection_relative_isotop_distr.to_csv(os.path.join(directory, str(self.metabolite_name) + '_relative_isotop_distr.csv'))
 
 
-        if modules.global_vars.verbose:
+        if verbose:
             #print(self.collection_total_excess)
             #print(self.collection_isotop_distr)
             print('exported to folder "csv"')
@@ -135,20 +135,20 @@ class metabolite_pool(object):
 
 
     def to_tmp(self, number_of_molecules):
-        if modules.global_vars.verbose:
+        if verbose:
             print('running %s.to_tmp' % self.metabolite_name)
 
         self.tmp = self.pool.sample(n = number_of_molecules)
         self.pool = self.pool.loc[~self.pool.index.isin(self.tmp.index)] # rows which are not in self.tmp
 
-        if modules.global_vars.verbose:
+        if verbose:
             print(self.tmp)
             print('')
 
 
     
     def from_tmp(self, number_of_molecules, source):
-        if modules.global_vars.verbose:
+        if verbose:
             print('running %s.from_tmp' % self.metabolite_name)
 
         tmp = source.tmp.sample(n = number_of_molecules)
@@ -162,14 +162,14 @@ class metabolite_pool(object):
 
         self.pool = self.pool.reset_index(drop=True)
 
-        if modules.global_vars.verbose:
+        if verbose:
             print(self.pool)
             print('')
 
 
 
     def introduce_molecules(self, number_of_molecules, molecule):
-        if modules.global_vars.verbose:
+        if verbose:
             print('running %s.introduce_molecules' % self.metabolite_name)
 
         # Sanity check
@@ -199,17 +199,17 @@ class metabolite_pool(object):
         #    print('ERROR in function "introduce_molecules": Pool size of %s changed' % self.metabolite_name)
         #    quit()
 
-        if modules.global_vars.verbose:
+        if verbose:
             print(self.pool)
             print('')
 
 
 
     def check_pool_size(self):
-        if modules.global_vars.verbose:
+        if verbose:
             print('running %s.check_pool_size' % self.metabolite_name)
 
-        if modules.global_vars.verbose:
+        if verbose:
             if self.pool.shape[0] == self.pool_size:
                 print('+ Pool size unchanged')
                 print('')
@@ -219,7 +219,7 @@ class metabolite_pool(object):
 
 
     def check_tmp_size(self, number_of_molecules = 0): # number_of molecules == number expected to be left over
-        if modules.global_vars.verbose:
+        if verbose:
             print('running %s.check_tmp_size' % self.metabolite_name)
 
             if self.tmp.shape[0] == number_of_molecules:
@@ -232,7 +232,7 @@ class metabolite_pool(object):
 
 
     def mirror_symmetry(self):
-        if modules.global_vars.verbose:
+        if verbose:
             print('running %s.mirror_symmetry' % self.metabolite_name)
 
         # Randomly choose 50% of the rows
@@ -250,6 +250,6 @@ class metabolite_pool(object):
         #if succinate.pool.shape[0] != succinate.pool_size:
         #    print('ERROR in function "mirror_symmetry_succinate": Pool size changed')
         #    quit()
-        if modules.global_vars.verbose:
+        if verbose:
             print('%s rotated' % self.metabolite_name)
             print('')
