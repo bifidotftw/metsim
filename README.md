@@ -24,10 +24,10 @@ Example
 
 The following metabolic network depicting the central energy metabolism as well as selected amino acids was used as an example.
 
-![metabolic network](https://raw.githubusercontent.com/bifidotftw/metsim/blob/master/examples/central_energy_metabolism/metabolic_network.png)
+![metabolic network](https://github.com/bifidotftw/metsim/blob/master/examples/central_energy_metabolism/metabolic_network.png)
 
 10 000 steps were simulated in roughly 20 minutes.
 As an example, the enrichment and isotopologue distribution of aspartate is shown.
 
-![enrichment of aspartate](https://raw.githubusercontent.com/bifidotftw/metsim/blob/master/examples/central_energy_metabolism/output/aspartate_total_excess.png)
-![isotopologue distribution of aspartate](https://raw.githubusercontent.com/bifidotftw/metsim/blob/master/examples/central_energy_metabolism/output/aspartate_isotop_distr.png)
+![enrichment of aspartate](https://github.com/bifidotftw/metsim/blob/master/examples/central_energy_metabolism/output/aspartate_total_excess.png)
+![isotopologue distribution of aspartate](https://github.com/bifidotftw/metsim/blob/master/examples/central_energy_metabolism/output/aspartate_isotop_distr.png)
