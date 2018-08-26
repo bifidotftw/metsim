@@ -10,7 +10,7 @@ Programming Design
 MetSim is employing object oriented programming where each metabolite pool is an object.
 Metabolite pools are stored in pandas dataframes where each column represents a carbon and each row a molecule.
 Unlabeled (12C) carbons are represented by a 0, while labeled (13C) carbons are represented by a 1.
-Consequently, a molecule is a sequence of 0s and 1s, for example {'C1': 0, 'C2': 0, 'C3': 1} represents a three-carbon metabolite, in this case lactate, which is labeled once.
+Consequently, a molecule is a sequence of 0s and 1s, for example {'C1': 0, 'C2': 0, 'C3': 1} represents a three-carbon metabolite which is labeled once at the C3 position.
 
 Calculation is done step-wise and every step consists of two sub-steps.
 First, from every metabolite pool random molecules are moved to an intermediate pool called tmp and subsequently distributed to the specified neighboring metabolite pools.
@@ -27,7 +27,7 @@ The following metabolic network depicting the central energy metabolism as well 
 ![metabolic network](https://github.com/bifidotftw/metsim/blob/master/examples/central_energy_metabolism/metabolic_network.png)
 
 10 000 steps were simulated in roughly 20 minutes.
-As an example, the enrichment and isotopologue distribution of aspartate is shown.
+As an example, the enrichment and isotopologue distribution of aspartate is shown, all other results can be viewed in the examples folder.
 
 ![enrichment of aspartate](https://github.com/bifidotftw/metsim/blob/master/examples/central_energy_metabolism/output/aspartate_total_excess.png)
 ![isotopologue distribution of aspartate](https://github.com/bifidotftw/metsim/blob/master/examples/central_energy_metabolism/output/aspartate_isotop_distr.png)
